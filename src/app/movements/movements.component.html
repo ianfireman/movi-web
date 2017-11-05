@@ -23,7 +23,10 @@
                                 </div>
 
                                 <div class="col-xs-3 text-right">
-                                    <button [disabled]="!movement" (click)="startMovement()" class="btn btn-sm btn-success btn-icon">
+                                    <button *ngIf="!started" [disabled]="!movement" (click)="startMovement()" class="btn btn-sm btn-success btn-icon">
+                                        <i class="fa fa-play"></i>
+                                    </button>
+                                    <button *ngIf="started" (click)="stopMovement()" class="btn btn-sm btn-success btn-icon">
                                         <i class="fa fa-play"></i>
                                     </button>
                                 </div>
@@ -38,8 +41,13 @@
                 <div class="header">
                     <h4 class="title">Acompanhamento</h4>
                 </div>
-                <div class="content">
-                    rolando
+                <x-chartist
+                [data]="data"
+                [type]="type">
+              </x-chartist>
+                <div class="content"><div class="row">
+                     
+                        </div>
                 </div>
             </div>
         </div>

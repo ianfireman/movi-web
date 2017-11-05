@@ -10,7 +10,6 @@ import { NavbarModule} from './shared/navbar/navbar.module';
 import { FixedPluginModule} from './shared/fixedplugin/fixedplugin.module';
 import { NguiMapModule} from '@ngui/map';
 
-import { DashboardComponent }   from './dashboard/dashboard.component';
 import { UserComponent }   from './user/user.component';
 import { TableComponent }   from './table/table.component';
 import { PatientsComponent }   from './patients/patients.component';
@@ -22,11 +21,13 @@ import { NotificationsComponent }   from './notifications/notifications.componen
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AuthenticationService, SessionService, AuthEventService, MovementService, ConfigService} from './core/services'
+import {
+  ChartistModule
+} from 'ng-chartist';
 
 @NgModule({
   declarations: [
     AppComponent,
-    DashboardComponent,
     UserComponent,
     PatientsComponent,
     TableComponent,
@@ -41,6 +42,7 @@ import { AuthenticationService, SessionService, AuthEventService, MovementServic
     HttpModule,
     RouterModule.forRoot(AppRoutes),
     SidebarModule,
+    ChartistModule,
     NavbarModule,
     FormsModule,
     FooterModule,

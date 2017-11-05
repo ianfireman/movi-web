@@ -1,6 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { AuthenticationService, SessionService, AuthEventService, MovementService } from '../core/services/index';
 import { Router, ActivatedRoute } from '@angular/router';
+import { EventSourcePolyfill } from 'ng-event-source';
+import * as Chartist from 'chartist';
+
+import { ChartType, ChartEvent } from './chart.component';
+
+export interface LiveData {
+    labels: string[];
+    series: Array<Array<number>>;
+}
 
 @Component({
     selector: 'movements-cmp',
@@ -9,10 +18,15 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 
 export class MovementComponent implements OnInit {
+    data: LiveData;
+    type: ChartType
+
     movement = null;
     loading = true;
+    started = false;
+    time = 0;
     loadingMovement = true;
-    startRequested = false;;
+    startRequested = false;
 
     constructor(
         private route: ActivatedRoute,
@@ -20,7 +34,33 @@ export class MovementComponent implements OnInit {
         private authenticationService: AuthenticationService,
         private movementService: MovementService,
         private authEventService: AuthEventService,
-        private sessionService: SessionService) { }
+        private zone: NgZone,
+        private sessionService: SessionService) {
+        this.data = {
+            labels: [],
+            series: []
+        };
+
+        this.type = 'Line';
+        
+        let eventSource = new EventSourcePolyfill('http://localhost:9090');
+
+        eventSource.onmessage = (data => {
+            this.zone.run(() => {
+                let arrayData = data.data.split(',');
+                this.started = true;
+                this.time = Number(arrayData[1]);
+                console.log(arrayData);
+                this.data.labels.push("");
+                if(!this.data.series[0]) {
+                    this.data.series.push([Number(arrayData[0])]);
+                } else {
+                    this.data.series[0].push(Number(arrayData[0]));
+                }
+                this.data = Object.assign({}, this.data);
+            });
+        });
+    }
 
     ngOnInit() {
         let movementId = this.route.snapshot.params['movementId'];
@@ -51,7 +91,7 @@ export class MovementComponent implements OnInit {
         this.movementService.stopMovement(this.movement.movementId, this.movement.patient).subscribe(
             data2 => {
                 console.log(data2);
-                this.startRequested = true;
+                this.started = false;
             },
             error => {
                 this.startRequested = false;
