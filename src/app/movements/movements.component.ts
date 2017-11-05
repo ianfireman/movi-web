@@ -51,11 +51,16 @@ export class MovementComponent implements OnInit {
                 this.started = true;
                 this.time = Number(arrayData[1]);
                 console.log(arrayData);
-                this.data.labels.push("");
+                if(this.data.labels.length < 40) {
+                    this.data.labels.push("");
+                }
                 if(!this.data.series[0]) {
                     this.data.series.push([Number(arrayData[0])]);
                 } else {
                     this.data.series[0].push(Number(arrayData[0]));
+                }
+                if( this.data.series[0].length > 40) {
+                    this.data.series[0].shift();
                 }
                 this.data = Object.assign({}, this.data);
             });

@@ -27,7 +27,7 @@
                                         <i class="fa fa-play"></i>
                                     </button>
                                     <button *ngIf="started" (click)="stopMovement()" class="btn btn-sm btn-success btn-icon">
-                                        <i class="fa fa-play"></i>
+                                        <i class="fa fa-pause"></i>
                                     </button>
                                 </div>
                             </div>
@@ -40,6 +40,9 @@
             <div class="card">
                 <div class="header">
                     <h4 class="title">Acompanhamento</h4>
+                </div>
+                <div class="header pull-right">
+                    <h4 class="title">{{time}}s</h4>
                 </div>
                 <x-chartist
                 [data]="data"
